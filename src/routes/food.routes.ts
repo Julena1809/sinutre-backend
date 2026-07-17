@@ -33,6 +33,18 @@ foodRouter.post('/', requireAuth, async (req, res) => {
     fatPer100g,
   } = req.body;
 
+  if (
+    !name ||
+    caloriesPer100g < 0 ||
+    carbsPer100g < 0 ||
+    proteinPer100g < 0 ||
+    fatPer100g < 0
+  ) {
+    return res.status(400).json({
+      error: "Dados inválidos para cadastro do alimento"
+    });
+  }
+
   const food = await prisma.food.create({
     data: {
       name,
