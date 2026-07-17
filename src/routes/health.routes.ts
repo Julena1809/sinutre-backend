@@ -1,7 +1,9 @@
 import { Router } from "express";
 import {
   createHealthData,
-  getHealthData
+  getHealthData,
+  updateHealthData
+
 } from "../controllers/health.controller";
 import { requireAuth } from "../middlewares/auth.middleware";
 
@@ -20,4 +22,9 @@ healthRoutes.get(
   "/",
   requireAuth,
   getHealthData
+);
+healthRoutes.put(
+  "/",
+  requireAuth,
+  updateHealthData
 );
