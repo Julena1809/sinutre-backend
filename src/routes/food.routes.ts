@@ -115,3 +115,31 @@ foodRouter.put('/:id', requireAuth, async (req, res) => {
 
   return res.json(updatedFood);
 });
+
+foodRouter.delete('/:id', requireAuth, async (req, res) => {
+  const id = Number(req.params.id);
+
+  const food = await prisma.food.findFirst({
+    where: {
+      id,
+      userId: req.userId!,
+    },
+  });
+
+
+  if (!food) {
+    return res.status(404).json({
+      error: "Alimento não encontrado"
+    });
+  }
+
+
+  await prisma.food.delete({
+    where: {
+      id,
+    },
+  });
+
+
+  return res.status(204).send();
+});
