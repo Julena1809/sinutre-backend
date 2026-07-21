@@ -8,7 +8,27 @@ import { healthRoutes } from './routes/health.routes';
 
 export const app = express();
 
-app.use(cors({ origin: env.frontendUrl, credentials: true }));
+// Lista de origens permitidas (seu localhost + seu domínio da Vercel + variável do env)
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  env.frontendUrl,
+].filter(Boolean); // Remove valores indefinidos se env.frontendUrl for opcional
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      // Permite requisições sem origin (como mobile, cURL ou Postman) ou origens permitidas
+      if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+        callback(null, true);
+      } else {
+        callback(new Error('Bloqueado pelo CORS'));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 app.get('/health', (_req, res) => {
