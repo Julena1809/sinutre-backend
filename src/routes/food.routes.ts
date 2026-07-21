@@ -134,12 +134,17 @@ foodRouter.delete('/:id', requireAuth, async (req, res) => {
   }
 
 
-  await prisma.food.delete({
-    where: {
-      id,
-    },
-  });
+  await prisma.mealFood.deleteMany({
+  where: {
+    foodId: id,
+  },
+});
 
+await prisma.food.delete({
+  where: {
+    id,
+  },
+});
 
   return res.status(204).send();
 });
